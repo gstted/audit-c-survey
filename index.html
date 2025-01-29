@@ -115,7 +115,15 @@
                 message = "You are at very high risk, please inform your doctor for further information.";
             }
             
-            document.getElementById("result").innerText = message;
+            let resultElement = document.getElementById("result");
+            resultElement.innerText = message;
+            if (score >= 0 && score <= 4) {
+                resultElement.style.color = "green";
+            } else if (score >= 5 && score <= 7) {
+                resultElement.style.color = "orange";
+            } else if (score >= 8 && score <= 12) {
+                resultElement.style.color = "red";
+            }
         }
     </script>
 </body>
