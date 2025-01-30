@@ -54,7 +54,6 @@
             margin-top: 20px; 
             font-size: 1.4em; 
             font-weight: bold; 
-            color: #007BFF;
         }
         img {
             margin-top: 20px;
@@ -63,7 +62,7 @@
 </head>
 <body>
     <div style="text-align: center; margin-bottom: 20px;">
-        <img src="http://raw.githubusercontent.com/gglendaxu13/GSTTlogo/refs/heads/main/NHS_gstt%20logo.svg">
+        <img src="https://raw.githubusercontent.com/gglendaxu13/GSTTlogo/refs/heads/main/NHS_gstt%20logo.svg" alt="Guy's and St Thomas' NHS Trust Logo" style="max-width: 200px;">
     </div>
     <div class="container">
         <h2>Alcohol Consumption Calculator</h2>
@@ -99,34 +98,40 @@
         </form>
 
         <div id="result"></div>
-        <img id="qrCode" src="" style="display:none;" />
     </div>
 
     <script>
         function calculateAuditC() {
-            let q1 = parseInt(document.getElementById("q1").value);
-            let q2 = parseInt(document.getElementById("q2").value);
-            let q3 = parseInt(document.getElementById("q3").value);
-            let score = q1 + q2 + q3;
-            
+            let q1 = document.getElementById("q1").value;
+            let q2 = document.getElementById("q2").value;
+            let q3 = document.getElementById("q3").value;
+
+            let score = parseInt(q1) + parseInt(q2) + parseInt(q3);
+
             let message = "";
             if (score >= 0 && score <= 4) {
                 message = "You are at low risk.";
+                document.getElementById("result").style.color = "green";
             } else if (score >= 5 && score <= 7) {
                 message = "You are at high risk, please inform your doctor for further information.";
+                document.getElementById("result").style.color = "orange";
             } else if (score >= 8 && score <= 12) {
                 message = "You are at very high risk, please inform your doctor for further information.";
+                document.getElementById("result").style.color = "red";
             }
-            
-            let resultElement = document.getElementById("result");
-            resultElement.innerText = message;
-            if (score >= 0 && score <= 4) {
-                resultElement.style.color = "green";
-            } else if (score >= 5 && score <= 7) {
-                resultElement.style.color = "orange";
-            } else if (score >= 8 && score <= 12) {
-                resultElement.style.color = "red";
-            }
+
+            document.getElementById("result").innerText = message;
+
+            // Send data to Google Sheet
+            fetch("https://script.google.com/macros/s/AKfycbyU6A3CdcpWANrTWfHpQSJ2kSi868XBk3aYpSfbY6j1TocZHCp937NVnSytAuyb2dNZbw/exec", {
+                method: "POST",
+                body: new URLSearchParams({
+                    q1: q1,
+                    q2: q2,
+                    q3: q3
+                })
+            }).then(response => console.log("Response logged"))
+              .catch(error => console.error("Error logging response:", error));
         }
     </script>
 </body>
