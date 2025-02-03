@@ -128,9 +128,19 @@
         <div id="result"></div>
         <div class="next-tool" id="nextTool">
             <p>Would you like to calculate your alcohol units and calories?</p>
-            <a href="https://www.drinkaware.co.uk/tools/unit-and-calorie-calculator#/unit-and-calorie-calculator" target="_blank" class="drinkaware-link">Go to Drinkaware Calculator</a>
+            <a href="https://www.drinkaware.co.uk/tools/unit-and-calorie-calculator#/unit-and-calorie-calculator" 
+               target="_blank" 
+               class="drinkaware-link" 
+               onclick="trackClick('Drinkaware Calculator')">
+               Go to Drinkaware Calculator
+            </a>
             <p>Learn more about how alcohol affects your body:</p>
-            <a href="https://gstted.github.io/alcohol-harms/" target="_blank" class="harms-link">Click Here for Alcohol Harms on the Body</a>
+            <a href="https://gstted.github.io/alcohol-harms/" 
+               target="_blank" 
+               class="harms-link" 
+               onclick="trackClick('Alcohol Harms Interactive Image')">
+               Click Here for Alcohol Harms on the Body
+            </a>
         </div>
     </div>
 
@@ -140,7 +150,6 @@
             let q2 = document.getElementById("q2").value;
             let q3 = document.getElementById("q3").value;
 
-            // Ensure all questions are answered
             if (q1 === "" || q2 === "" || q3 === "") {
                 alert("Please answer all questions before calculating your score.");
                 return;
@@ -164,7 +173,6 @@
             resultElement.innerText = message;
             document.getElementById("nextTool").style.display = "block";
 
-            // Securely send data to Google Sheets
             fetch("https://script.google.com/macros/s/AKfycbzBMQ3ytcnIa4xEW6KgAbgz7wpED7WMVQdqoQXTOoo3gymmcp9aLerA-sKdVCD9hD2Q/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -174,8 +182,17 @@
                     q3: q3,
                     score: score
                 }).toString()
-            }).then(response => console.log("Response logged to Google Sheets"))
-              .catch(error => console.error("Error logging response:", error));
+            });
+        }
+
+        function trackClick(linkName) {
+            fetch("https://script.google.com/macros/s/AKfycbzBMQ3ytcnIa4xEW6KgAbgz7wpED7WMVQdqoQXTOoo3gymmcp9aLerA-sKdVCD9hD2Q/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    event: linkName
+                }).toString()
+            });
         }
     </script>
 </body>
